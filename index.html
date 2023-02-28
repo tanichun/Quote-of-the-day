@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote of the Day</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #5372f0;
+}
+.wrapper {
+    width: 605px;
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px 30px 25px;
+}
+.wrapper header {
+    font-size: 35px;
+    font-weight: 600;
+    text-align: center;
+}
+.wrapper .content {
+    margin: 35px 0;
+}
+.content .Quote-Area {
+    display: flex;
+    justify-content: center;
+}
+.Quote-Area i{
+    font-size: 15px;
+}
+.Quote-Area i:first-child{
+    margin: 3px 10px 0 0;
+}
+.Quote-Area i:last-child{
+    display: flex;
+    align-items: flex-end;
+    margin: 0 0 3px 10px;
+}
+.Quote-Area .quote {
+    font-size: 22px;
+    text-align: center;
+    word-break: break-all;
+
+}
+.content .author{
+    display: flex;
+    font-size: 18px;
+    font-style: italic;
+    margin-top: 20px;
+    justify-content: flex-end;
+}
+.author span:first-child{
+    margin: -7px 5px 0 0;
+    font-family: monospace;
+}
+.wrapper .button{
+    border-top: 1px solid #ccc;
+}
+.button .features{
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    justify-content: space-between;
+}
+.features ul{
+    display: flex;
+}
+.features ul li{
+    list-style: none;
+    margin: 0 5px;
+    height: 47px;
+    width: 47px;
+    display: flex;
+    cursor: pointer;
+    color: #5372f0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid #5372f0;
+    transition: all 0.3s ease;
+}
+.features ul li:hover{
+    color: #fff;
+    background: #5372f0;
+}
+.features button{
+    border: none;
+    outline: none;
+    color: #fff;
+    cursor: pointer;
+    font-style: 16px;
+    padding: 13px 22px;
+    border-radius: 30px;
+    background: #5372f0;
+}
+button.loading{
+    opacity: 0.7;
+    pointer-events: none;
+}
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>Quote of the day</header>
+        <dic class="content">
+            <div class="Quote-Area">
+                <i class="fas fa-quote-left"></i>
+                <p class="quote">Never give up because you never know if the next try is going to be the one that works.</p>
+                <i class="fas fa-quote-right"></i>
+            </div>
+            <div class="author">
+                <span>__</span>
+                <span class="name">Mary Kay Ash</span>
+            </div>
+        </dic>
+        <div class="button">
+            <div class="features">
+                <ul>
+                    <li class="sound"><i class="fas fa-volume-up"></i></li>
+                    <li class="copy"><i class="fas fa-copy"></i></li>
+                    <li class="twitter"><i class="fab fa-twitter"></i></li>
+                </ul>
+                <button>New Quote</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const quoteText = document.querySelector(".quote"),
+        authorName = document.querySelector(".author .name"),
+        quoteBtn = document.querySelector("button"),
+        soundBtn = document.querySelector(".sound"),
+        copyBtn = document.querySelector(".copy"),
+        twitterBtn = document.querySelector(".twitter");
+        
+        function randomQuote() {
+            quoteBtn.classList.add("loading");
+            quoteBtn.innerText = "Loading Quote...";
+            fetch("https://api.quotable.io/random").then(res => res.json()).then(result =>{
+                quoteText.innerText = result.content;
+                authorName.innerText = result.author;
+                quoteBtn.innerText = "New Quote";
+                quoteBtn.classList.remove("loading");
+                console.log(authorName);
+            });
+        }
+        
+        soundBtn.addEventListener("click", ()=>{
+            let utterance = new SpeechSynthesisUtterance(`${quoteText.innerText} by ${authorName.innerText}`);
+            speechSynthesis.speak(utterance);
+        });
+        
+        copyBtn.addEventListener("click", ()=>{
+            navigator.clipboard.writeText(quoteText.innerText)
+        });
+        
+        twitterBtn.addEventListener("click", ()=>{
+            let tweetUrl = `https://twitter.com/intent/tweet?url=${quoteText.innerText}`;
+            window.open(tweetUrl, "_blank");
+        });
+        
+        quoteBtn.addEventListener("click", randomQuote)
+        
+        </script>
+</body>
+</html>
